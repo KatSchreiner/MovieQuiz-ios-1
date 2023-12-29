@@ -5,6 +5,9 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private var imageView: UIImageView!
     @IBOutlet private var textLabel: UILabel!
     @IBOutlet private var counterLabel: UILabel!
+    @IBOutlet private var myButtonYes: UIButton!
+    @IBOutlet private var myButtonNo: UIButton!
+    
     
     // для состояния "Вопрос показан"
     struct QuizStepViewModel {
@@ -43,7 +46,9 @@ final class MovieQuizViewController: UIViewController {
         QuizQuestion(image: "Tesla", text: "Рейтинг этого фильма \n больше чем 6?", correctAnswer: false),
         QuizQuestion(image: "Vivarium", text: "Рейтинг этого фильма \n больше чем 6?", correctAnswer: false)
     ]
+
     // счетчик вопросов
+
     private var currentQuestionIndex = 0
     // счетчик правильных ответов
     private var correctAnswers = 0
@@ -52,17 +57,14 @@ final class MovieQuizViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // радиус скругления углов рамки
-        imageView.layer.cornerRadius = 20 // радиус скругления углов рамки
-        
         // метода show, показывающий первый вопрос
         let currentQuestion = questions[currentQuestionIndex]
         let questionStep = convert(model: currentQuestion)
         show(quiz: questionStep)
-        
     }
     // действие при нажатии на кнопку ДА
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
+        myButtonYes.isEnabled = false
         let currentQuestion = questions[currentQuestionIndex]
         let givenAnswer = true
         showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
@@ -70,9 +72,16 @@ final class MovieQuizViewController: UIViewController {
     
     // действие при нажатии на кнопку НЕТ
     @IBAction private func noButtonClicked(_ sender: UIButton) {
+        myButtonNo.isEnabled = false
         let currentQuestion = questions[currentQuestionIndex]
         let givenAnswer = false
         showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+    }
+    
+    // включаем кнопку
+    private func enableButton() {
+        myButtonYes.isEnabled = true
+        myButtonNo.isEnabled = true
     }
     
     // конвертация вопроса во вью модель
@@ -91,9 +100,11 @@ final class MovieQuizViewController: UIViewController {
     
     // меняем цвет рамки в зависимости от ответа
     private func showAnswerResult(isCorrect: Bool) {
+        imageView.layer.masksToBounds = true
+        imageView.layer.borderWidth = 8
+        imageView.layer.cornerRadius = 20 // радиус скругления углов рамки
         if isCorrect {
             correctAnswers += 1
-            imageView.layer.borderWidth = 8
             imageView.layer.borderColor = UIColor.ypGreen.cgColor
         } else {
             imageView.layer.borderColor = UIColor.ypRed.cgColor
@@ -119,6 +130,7 @@ final class MovieQuizViewController: UIViewController {
             let nextQuestion = questions[currentQuestionIndex]
             let viewModel = convert(model: nextQuestion)
             show(quiz: viewModel)
+            enableButton()
         }
     }
     
@@ -136,6 +148,7 @@ final class MovieQuizViewController: UIViewController {
             let firstQuestion = self.questions[self.currentQuestionIndex]
             let viewModel = self.convert(model: firstQuestion)
             self.show(quiz: viewModel)
+            self.enableButton()
         }
         alert.addAction(action)
         self.present(alert, animated: true, completion: nil)
