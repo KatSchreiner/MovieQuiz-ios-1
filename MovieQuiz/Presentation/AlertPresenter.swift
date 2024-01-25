@@ -33,9 +33,7 @@ class AlertPresenter: AlertPresenterProtocol {
     }
 
     }
-
-
-
+ 
 //private func show(quiz result: QuizResultsViewModel) {
 //    let alert = UIAlertController(
 //        title: result.title,

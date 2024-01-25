@@ -16,7 +16,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     private lazy var alertPresenter: AlertPresenterProtocol = AlertPresenter(viewController: self) // экземпляр класса AlertPresenter
     
     // MARK: - Lifecycle
-    override func viewDidLoad() {
+    override func viewDidLoad() { 
         super.viewDidLoad()
         questionFactory.delegate = self // настройка делегата questionFactory
         questionFactory.requestNextQuestion() // вызов метода для получения первого вопроса

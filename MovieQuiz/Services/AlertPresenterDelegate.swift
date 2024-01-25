@@ -11,3 +11,4 @@ import UIKit
 protocol AlertPresenterDelegate: AnyObject {
     func alertDidShow(_ alertModel: AlertModel)
 }
+ 
