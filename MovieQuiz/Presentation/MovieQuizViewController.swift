@@ -14,6 +14,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     private var questionFactory: QuestionFactoryProtocol = QuestionFactory() // свойство с фабрикой вопросов
     private var currentQuestion: QuizQuestion? // текущий вопрос
     private lazy var alertPresenter: AlertPresenterProtocol = AlertPresenter(viewController: self) // экземпляр класса AlertPresenter
+    private var statisticService: StatisticServiceImplementation?
+     
     
     // MARK: - Lifecycle
     override func viewDidLoad() { 
@@ -21,6 +23,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         questionFactory.delegate = self // настройка делегата questionFactory
         questionFactory.requestNextQuestion() // вызов метода для получения первого вопроса
         alertPresenter.delegate = self
+        statisticService = StatisticServiceImplementation()
+        
     }
     
     // MARK: - QuestionFactoryDelegate
@@ -93,14 +97,15 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     private func showNextQuestionOrResults() {
         if currentQuestionIndex == questionsAmount - 1 {
             imageView.layer.borderColor = UIColor.clear.cgColor
+            
             let alertModel = AlertModel(
                 title: "Этот раунд окончен!",
-                message: "Ваш результат: \(correctAnswers)/\(questionsAmount)",
+                message: showFinalResults(),
                 buttonText: "Сыграть еще раз",
                 completion: {})
             
             alertPresenter.showAlert(alertModel)
-
+            
         } else {
             currentQuestionIndex += 1
             imageView.layer.borderColor = UIColor.clear.cgColor
@@ -109,5 +114,26 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         }
     }
     
+    private func showFinalResults() -> String {
+        
+        guard let statisticService = statisticService else {
+            assertionFailure("Что-то пошло не так( \n невозможно загрузить данные")
+            return ""
+        }
+        
+        statisticService.store(correct: correctAnswers, total: questionsAmount)
+        
+        let accuracy = String(format: "%.2f", statisticService.totalAccuracy)
+        let totalPlaysCount = "Количество сыгранных квизов: \(statisticService.gamesCount)"
+        let currentGameResult = "Ваш результат: \(correctAnswers)\\\(questionsAmount)"
+        let bestGameInfo = "Рекорд: \(statisticService.correct)\\\(statisticService.total)"
+        + "(\(statisticService.bestGame.date.dateTimeString))"
+        let averageAccuracy = "Средняя точность: \(accuracy)%"
+        
+        let resultMessage = [currentGameResult, totalPlaysCount, bestGameInfo, averageAccuracy].joined(separator: "\n")
+        
+        return resultMessage
+    }
+     
 }
 
