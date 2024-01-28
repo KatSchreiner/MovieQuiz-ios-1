@@ -14,7 +14,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     private var questionFactory: QuestionFactoryProtocol = QuestionFactory() // свойство с фабрикой вопросов
     private var currentQuestion: QuizQuestion? // текущий вопрос
     private lazy var alertPresenter: AlertPresenterProtocol = AlertPresenter(viewController: self) // экземпляр класса AlertPresenter
-    private var statisticService: StatisticServiceImplementation?
+    private var statisticService: StatisticService?
      
     
     // MARK: - Lifecycle
@@ -116,7 +116,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     
     private func showFinalResults() -> String {
         
-        guard let statisticService = statisticService else {
+        guard let statisticService = statisticService as? StatisticServiceImplementation else {
             assertionFailure("Что-то пошло не так( \n невозможно загрузить данные")
             return ""
         }
@@ -134,6 +134,5 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         
         return resultMessage
     }
-     
 }
 
