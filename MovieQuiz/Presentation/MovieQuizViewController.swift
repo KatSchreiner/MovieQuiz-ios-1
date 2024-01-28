@@ -123,14 +123,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         
         statisticService.store(correct: correctAnswers, total: questionsAmount)
         
-        let accuracy = String(format: "%.2f", statisticService.totalAccuracy)
-        let totalPlaysCount = "Количество сыгранных квизов: \(statisticService.gamesCount)"
-        let currentGameResult = "Ваш результат: \(correctAnswers)\\\(questionsAmount)"
-        let bestGameInfo = "Рекорд: \(statisticService.correct)\\\(statisticService.total)"
-        + "(\(statisticService.bestGame.date.dateTimeString))"
-        let averageAccuracy = "Средняя точность: \(accuracy)%"
-        
-        let resultMessage = [currentGameResult, totalPlaysCount, bestGameInfo, averageAccuracy].joined(separator: "\n")
+        let resultMessage = """
+        Ваш результат: \(correctAnswers)\\\(questionsAmount)
+        Количество сыгранных квизов: \(statisticService.gamesCount)
+        Рекорд: \(statisticService.correct)\\\(statisticService.total) (\(statisticService.bestGame.date.dateTimeString))
+        Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%
+        """
         
         return resultMessage
     }
