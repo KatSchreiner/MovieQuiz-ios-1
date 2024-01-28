@@ -24,7 +24,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         questionFactory.requestNextQuestion() // вызов метода для получения первого вопроса
         alertPresenter.delegate = self
         statisticService = StatisticServiceImplementation()
-        
+        imageView.layer.cornerRadius = 20 // радиус скругления углов рамки
     }
     
     // MARK: - QuestionFactoryDelegate
@@ -82,7 +82,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     private func showAnswerResult(isCorrect: Bool) {
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
-        imageView.layer.cornerRadius = 20 // радиус скругления углов рамки
+        
         if isCorrect {
             correctAnswers += 1
             imageView.layer.borderColor = UIColor.ypGreen.cgColor
