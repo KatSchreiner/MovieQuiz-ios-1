@@ -1,3 +1,5 @@
+curl https://tv-api.com/en/API/Top250Movies/k_zcuw1ytf | json_pp -json_opt pretty,canonical
+
 ## **MovieQuiz**
 
 MovieQuiz - это приложение с квизами о фильмах из топ-250 рейтинга и самых популярных фильмах по версии IMDb.
