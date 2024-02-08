@@ -27,7 +27,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         statisticService = StatisticServiceImplementation()
         imageView.layer.cornerRadius = 20 // радиус скругления углов рамки
         
-        showLoadingIndicator()
+        activityIndicator.startAnimating()
         questionFactory?.loadData()
     }
     
@@ -47,8 +47,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     }
     
     func didLoadDataFromServer() {
-        activityIndicator.isHidden = true
+        activityIndicator.startAnimating()
         questionFactory?.requestNextQuestion()
+        activityIndicator.stopAnimating()
     }
     
     // MARK: - AlertPresenterDelegate
@@ -77,18 +78,13 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         myButtonNo.isEnabled = true
     }
     
-    private func showLoadingIndicator() {
-        activityIndicator.isHidden = false
-        activityIndicator.startAnimating()
-    }
-    
-    func hideLoadingIndicator() {
-        activityIndicator.isHidden = true
-    }
-    
     private func showNetworkError(message: String) {
-        hideLoadingIndicator()
-        let alertActivity = AlertModel(title: "Что-то пошло не так(", message: "Невозможно загрузить данные", buttonText: "Попробовать еще раз", completion: { [weak self] in
+        activityIndicator.stopAnimating()
+        let alertActivity = AlertModel(
+            title: "Что-то пошло не так(",
+            message: "Невозможно загрузить данные",
+            buttonText: "Попробовать еще раз",
+            completion: { [weak self] in
             guard let self = self else { return }
             self.resetData()
         })
