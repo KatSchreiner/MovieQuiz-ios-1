@@ -34,6 +34,7 @@
 		C197F8C52B6A4CD100C7A511 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C197F8C42B6A4CD100C7A511 /* NetworkClient.swift */; };
 		C197F8C72B6A4F6E00C7A511 /* MostPopularMovies.swift in Sources */ = {isa = PBXBuildFile; fileRef = C197F8C62B6A4F6E00C7A511 /* MostPopularMovies.swift */; };
 		C197F8C92B6A513300C7A511 /* MoviesLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C197F8C82B6A513300C7A511 /* MoviesLoader.swift */; };
+		C1C2611E2B7E36F800B6ADD3 /* MovieQuizPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C2611D2B7E36F800B6ADD3 /* MovieQuizPresenter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +67,7 @@
 		C197F8C42B6A4CD100C7A511 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		C197F8C62B6A4F6E00C7A511 /* MostPopularMovies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MostPopularMovies.swift; sourceTree = "<group>"; };
 		C197F8C82B6A513300C7A511 /* MoviesLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesLoader.swift; sourceTree = "<group>"; };
+		C1C2611D2B7E36F800B6ADD3 /* MovieQuizPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieQuizPresenter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 				AD1ABAB72831907B00B3E448 /* Main.storyboard */,
 				C18058822B57ECDE00CDD65D /* AlertPresenter.swift */,
 				C197F8822B65B5A300C7A511 /* StatisticServiceImplementation.swift */,
+				C1C2611D2B7E36F800B6ADD3 /* MovieQuizPresenter.swift */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -264,6 +267,7 @@
 				C18058872B626C9300CDD65D /* AlertPresenterProtocol.swift in Sources */,
 				C18058852B5FEF5E00CDD65D /* AlertPresenterDelegate.swift in Sources */,
 				C197F8C52B6A4CD100C7A511 /* NetworkClient.swift in Sources */,
+				C1C2611E2B7E36F800B6ADD3 /* MovieQuizPresenter.swift in Sources */,
 				C18058742B569CCF00CDD65D /* QuestionFactory.swift in Sources */,
 				AD77F5742857F8810062FB14 /* Date+Extensions.swift in Sources */,
 				AD1ABAB22831907B00B3E448 /* AppDelegate.swift in Sources */,
