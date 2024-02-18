@@ -9,8 +9,6 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate  {
     @IBOutlet private var myButtonYes: UIButton!
     @IBOutlet private var myButtonNo: UIButton!
     
-    
-    
     lazy var alertPresenter: AlertPresenterProtocol = AlertPresenter(viewController: self) // экземпляр класса AlertPresenter
 //    private var statisticService: StatisticService?
     private var presenter: MovieQuizPresenter!
@@ -19,25 +17,11 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate  {
     override func viewDidLoad() { 
         super.viewDidLoad()
         presenter = MovieQuizPresenter(viewController: self)
-        
         alertPresenter.delegate = self
-        
         imageView.layer.cornerRadius = 20 // радиус скругления углов рамки
         activityIndicator.startAnimating()
 
     }
-    
-    // MARK: - QuestionFactoryDelegate
-//    func didReceiveNextQuestion(question: QuizQuestion?) {
-//        guard let question = question else { return }
-//        presenter.currentQuestion = question
-//        let viewModel = presenter.convert(model: question)
-//        DispatchQueue.main.async { [weak self] in
-//            self?.show(quiz: viewModel)
-//        }
-//    }
-    
-    
     
     // MARK: - AlertPresenterDelegate
     func alertDidShow(_ alertModel: AlertModel) {
@@ -68,7 +52,7 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate  {
     }
     
     func showNetworkError(message: String) {
-        activityIndicator.stopAnimating()
+        hideActivityIndicator()
         let alertActivity = AlertModel(
             title: "Что-то пошло не так(",
             message: "Невозможно загрузить данные",
@@ -97,15 +81,10 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate  {
     func showAnswerResult(isCorrect: Bool) {
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
-        
-        if isCorrect {
-            presenter.correctAnswers += 1
-            imageView.layer.borderColor = UIColor.ypGreen.cgColor
-        } else {
-            imageView.layer.borderColor = UIColor.ypRed.cgColor
-        }
+        presenter.didAnswer(isCorrectAnswer: isCorrect)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.presenter.showNextQuestionOrResults()
+            
         }
     }
      

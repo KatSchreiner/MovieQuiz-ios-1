@@ -56,8 +56,9 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     func isLastQuestion() -> Bool {
         currentQuestionIndex == questionsAmount - 1
     }
-    func resetQuestionIndex() {
+    func restartGame() {
         currentQuestionIndex = 0
+        correctAnswers = 0
     }
     func switchToNextQuestion() {
         currentQuestionIndex += 1
@@ -73,7 +74,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     }
     
     func showNextQuestionOrResults() {
-        if isLastQuestion() {
+        if self.isLastQuestion() {
             //imageView.layer.borderColor = UIColor.clear.cgColor
             
             let alertModel = AlertModel(
@@ -88,7 +89,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
             viewController?.alertPresenter.showAlert(alertModel)
             
         } else {
-            switchToNextQuestion()
+            self.switchToNextQuestion()
             //imageView.layer.borderColor = UIColor.clear.cgColor
             questionFactory?.requestNextQuestion()
             viewController?.enableButton()
@@ -114,10 +115,15 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     }
     
     func resetData() {
-        resetQuestionIndex()
-        correctAnswers = 0
+        restartGame()
         questionFactory?.requestNextQuestion()
         self.viewController?.enableButton()
+    }
+    
+    func didAnswer(isCorrectAnswer: Bool) {
+        if (isCorrectAnswer) {
+            correctAnswers += 1
+        }
     }
     
 }
