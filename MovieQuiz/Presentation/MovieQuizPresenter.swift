@@ -9,13 +9,14 @@ import Foundation
 import UIKit
 
 final class MovieQuizPresenter: QuestionFactoryDelegate {
-    let questionsAmount: Int = 10
+    private let questionsAmount: Int = 10
     private var currentQuestionIndex: Int = 0
-     var correctAnswers = 0    
+    private var correctAnswers = 0
+    
     private var questionFactory: QuestionFactory?
-    var currentQuestion: QuizQuestion?
+    private var currentQuestion: QuizQuestion?
     private var statisticService: StatisticService!
-    weak var viewController: MovieQuizViewController?
+    private weak var viewController: MovieQuizViewController?
     
     init(viewController: MovieQuizViewController) {
         self.viewController = viewController
@@ -28,6 +29,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     }
     
     func didFailToLoadData(with error: Error) {
+        let message = error.localizedDescription
         viewController?.showNetworkError(message: error.localizedDescription)
     }
     
@@ -46,7 +48,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     private func didAnswer(isYes: Bool) {
         guard let currentQuestion = currentQuestion else { return }
         let givenAnswer = isYes
-        viewController?.showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+        proceedWithAnswer(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
     func convert(model: QuizQuestion) -> QuizStepViewModel {
         let image = UIImage(data: model.image) ?? UIImage()
@@ -73,10 +75,9 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         }
     }
     
-    func showNextQuestionOrResults() {
+    func proceedToNextQuestionOrResults() {
         if self.isLastQuestion() {
-            //imageView.layer.borderColor = UIColor.clear.cgColor
-            
+            viewController?.clearBorder()
             let alertModel = AlertModel(
                 title: "Этот раунд окончен!",
                 message: showFinalResults(),
@@ -85,12 +86,10 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
                     guard let self = self else { return }
                     self.resetData()
                 })
-            
             viewController?.alertPresenter.showAlert(alertModel)
-            
         } else {
             self.switchToNextQuestion()
-            //imageView.layer.borderColor = UIColor.clear.cgColor
+            viewController?.clearBorder()
             questionFactory?.requestNextQuestion()
             viewController?.enableButton()
         }
@@ -126,4 +125,12 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         }
     }
     
+    func proceedWithAnswer(isCorrect: Bool) {
+        viewController?.highlightImageBorder(isCorrectAnswer: isCorrect)
+        didAnswer(isCorrectAnswer: isCorrect)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.proceedToNextQuestionOrResults()
+            
+        }
+    }
 }
