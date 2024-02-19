@@ -17,7 +17,7 @@ final class AlertPresenter: AlertPresenterProtocol {
     init(viewController: UIViewController) {
         self.viewController = viewController
     }
-    
+
     func showAlert(_ alertModel: AlertModel) {
         let alert = UIAlertController(
             title: alertModel.title,
@@ -28,6 +28,8 @@ final class AlertPresenter: AlertPresenterProtocol {
             alertModel.completion()
         }
         alert.addAction(action)
+        alert.view.accessibilityIdentifier = "showAlert"
+        
         viewController?.present(alert, animated: true, completion: nil)
         
         delegate?.alertDidShow(alertModel)

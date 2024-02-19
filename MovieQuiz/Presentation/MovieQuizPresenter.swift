@@ -8,28 +8,36 @@
 import Foundation
 import UIKit
 
-final class MovieQuizPresenter: QuestionFactoryDelegate {
+final class MovieQuizPresenter: QuestionFactoryDelegate, AlertPresenterDelegate {
+    
     private let questionsAmount: Int = 10
     private var currentQuestionIndex: Int = 0
     private var correctAnswers = 0
     
+    
     private var questionFactory: QuestionFactory?
     private var currentQuestion: QuizQuestion?
     private var statisticService: StatisticService!
-    private weak var viewController: MovieQuizViewController?
+    private weak var viewController: MovieQuizViewControllerProtocol?
+    var alertPresenter: AlertPresenterProtocol
     
-    init(viewController: MovieQuizViewController) {
+    
+    init(viewController: MovieQuizViewControllerProtocol) {
         self.viewController = viewController
-        
+        alertPresenter = AlertPresenter(viewController: viewController as! UIViewController)
+        alertPresenter.delegate = self
         questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         questionFactory?.delegate = self 
         statisticService = StatisticServiceImplementation()
         questionFactory?.loadData()
-        
+    }
+    
+    func alertDidShow(_ alertModel: AlertModel) {
+        resetData()
     }
     
     func didFailToLoadData(with error: Error) {
-        let message = error.localizedDescription
+        
         viewController?.showNetworkError(message: error.localizedDescription)
     }
     
@@ -78,6 +86,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     func proceedToNextQuestionOrResults() {
         if self.isLastQuestion() {
             viewController?.clearBorder()
+            
             let alertModel = AlertModel(
                 title: "Этот раунд окончен!",
                 message: showFinalResults(),
@@ -86,7 +95,8 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
                     guard let self = self else { return }
                     self.resetData()
                 })
-            viewController?.alertPresenter.showAlert(alertModel)
+            
+            alertPresenter.showAlert(alertModel)
         } else {
             self.switchToNextQuestion()
             viewController?.clearBorder()
@@ -130,7 +140,6 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         didAnswer(isCorrectAnswer: isCorrect)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.proceedToNextQuestionOrResults()
-            
         }
     }
 }

@@ -1,7 +1,7 @@
 import UIKit
 
-final class MovieQuizViewController: UIViewController, AlertPresenterDelegate  {
-    
+final class MovieQuizViewController: UIViewController, MovieQuizViewControllerProtocol  {
+
     @IBOutlet private var activityIndicator: UIActivityIndicatorView!
     @IBOutlet private var imageView: UIImageView!
     @IBOutlet private var textLabel: UILabel!
@@ -9,24 +9,21 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate  {
     @IBOutlet private var myButtonYes: UIButton!
     @IBOutlet private var myButtonNo: UIButton!
     
-    lazy var alertPresenter: AlertPresenterProtocol = AlertPresenter(viewController: self)
+//    private lazy var alertPresenter: AlertPresenterProtocol = AlertPresenter(viewController: self)
+    
     private var presenter: MovieQuizPresenter!
     
     // MARK: - Lifecycle
     override func viewDidLoad() { 
         super.viewDidLoad()
         presenter = MovieQuizPresenter(viewController: self)
-        alertPresenter.delegate = self
+//        alertPresenter.delegate = self
         imageView.layer.cornerRadius = 20 // радиус скругления углов рамки
         showActivityIndicator()
-
     }
-    
-    // MARK: - AlertPresenterDelegate
     func alertDidShow(_ alertModel: AlertModel) {
         presenter.resetData()
     }
-    
     // MARK: - Actions
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
         //myButtonYes.isEnabled = false
@@ -80,7 +77,7 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate  {
             self.presenter.resetData()
         })
         
-        alertPresenter.showAlert(alertActivity)
+        presenter.alertPresenter.showAlert(alertActivity)
     }
     
     func show(quiz step: QuizStepViewModel) {
