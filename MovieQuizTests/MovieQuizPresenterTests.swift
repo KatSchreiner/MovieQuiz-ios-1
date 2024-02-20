@@ -43,7 +43,6 @@ final class MovieQuizPresenterTests: XCTestCase {
         }
     }
 
-
     func testPresenterConvertModel() throws {
         let viewControllerMock = MovieQuizViewControllerMock()
         let sut = MovieQuizPresenter(viewController: viewControllerMock)
@@ -57,4 +56,3 @@ final class MovieQuizPresenterTests: XCTestCase {
         XCTAssertEqual(viewModel.questionNumber, "1/10")
     }
 }
-

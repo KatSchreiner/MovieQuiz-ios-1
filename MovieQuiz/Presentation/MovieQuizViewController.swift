@@ -1,6 +1,6 @@
 import UIKit
 
-final class MovieQuizViewController: UIViewController, MovieQuizViewControllerProtocol  {
+final class MovieQuizViewController: UIViewController, MovieQuizViewControllerProtocol, AlertPresenterDelegate  {
 
     @IBOutlet private var activityIndicator: UIActivityIndicatorView!
     @IBOutlet private var imageView: UIImageView!
@@ -9,7 +9,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     @IBOutlet private var myButtonYes: UIButton!
     @IBOutlet private var myButtonNo: UIButton!
     
-//    private lazy var alertPresenter: AlertPresenterProtocol = AlertPresenter(viewController: self)
+    private lazy var alertPresenter: AlertPresenterProtocol = AlertPresenter(viewController: self)
     
     private var presenter: MovieQuizPresenter!
     
@@ -17,7 +17,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     override func viewDidLoad() { 
         super.viewDidLoad()
         presenter = MovieQuizPresenter(viewController: self)
-//        alertPresenter.delegate = self
+        alertPresenter.delegate = self
         imageView.layer.cornerRadius = 20 // радиус скругления углов рамки
         showActivityIndicator()
     }
@@ -26,12 +26,10 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     }
     // MARK: - Actions
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        //myButtonYes.isEnabled = false
         closedButton()
         presenter.yesButtonClicked()
     }
     @IBAction private func noButtonClicked(_ sender: UIButton) {
-        //myButtonNo.isEnabled = false
         closedButton()
         presenter.noButtonClicked()
     }
@@ -63,7 +61,12 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     func highlightImageBorder(isCorrectAnswer: Bool) {
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
-        imageView.layer.borderColor = isCorrectAnswer ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
+        
+        if (isCorrectAnswer) {
+            imageView.layer.borderColor = UIColor.ypGreen.cgColor
+        } else {
+            imageView.layer.borderColor = UIColor.ypRed.cgColor
+        }
     }
     
     func showNetworkError(message: String) {
@@ -76,8 +79,19 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
             guard let self = self else { return }
             self.presenter.resetData()
         })
-        
-        presenter.alertPresenter.showAlert(alertActivity)
+        alertPresenter.showAlert(alertActivity)
+    }
+       
+    func showAlertGameEnd() {
+        let alertModel = AlertModel(
+            title: "Этот раунд окончен!",
+            message: presenter.showFinalResults(),
+            buttonText: "Сыграть еще раз",
+            completion: { [weak self] in
+                guard let self = self else { return }
+                self.presenter.resetData()
+            })
+        alertPresenter.showAlert(alertModel)
     }
     
     func show(quiz step: QuizStepViewModel) {

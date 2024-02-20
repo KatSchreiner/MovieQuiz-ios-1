@@ -9,9 +9,7 @@ import Foundation
 
 final class QuestionFactory: QuestionFactoryProtocol {
     private var moviesLoader: MoviesLoading
-    
     weak var delegate: QuestionFactoryDelegate?
-    
     private var movies: [MostPopularMovie] = []
     
     init(moviesLoader: MoviesLoading, delegate: QuestionFactoryDelegate?) {
@@ -52,10 +50,10 @@ final class QuestionFactory: QuestionFactoryProtocol {
             
             // Создаём вопрос, определяем его корректность и создаём модель вопроса
             let rating = Float(movie.rating) ?? 0
+            let randomRating = Int.random(in: 4..<10)
+            let text = "Рейтинг этого фильма \n больше чем \(randomRating)?"
             
-            let text = "Рейтинг этого фильма больше чем 7?"
-            
-            let correctAnswer = rating > 7
+            let correctAnswer = rating > Float(randomRating)
             
             let question = QuizQuestion(image: imageData, text: text, correctAnswer: correctAnswer)
         
@@ -65,6 +63,5 @@ final class QuestionFactory: QuestionFactoryProtocol {
             }
         }
     }
-    
 }
     

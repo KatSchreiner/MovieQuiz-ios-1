@@ -27,7 +27,6 @@ class MoviesLoaderTests: XCTestCase {
                 XCTFail("Unexpected failure")
             }
         }
-        
         waitForExpectations(timeout: 1)
     }
     
